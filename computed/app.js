@@ -4,7 +4,7 @@ var app = new Vue({
     slugText: "The Quick #(*!&@ Brown 29",
   },
   methods: {
-    now: function () {
+    now() {
       const date = new Date();
       return (
         String(date.getHours()) +

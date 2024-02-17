@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" />
+    <link rel="stylesheet" href="app.css">
     <style>
         [v-cloak] {
             display: none;
@@ -16,34 +19,53 @@
 
 <body class="">
     <div id="app" class="container" v-cloak>
-        <nav class="navbar navbar-light bg-light">
-            <div class="navbar-text ml-auto">
-                <b>cart: </b>
-                <span class="badge rounded-pill text-bg-success">{{ cart.length }}</span>
+        <nav class="navbar navbar-light fixed-top">
+            <div class="navbar-text ml-auto d-flex">
+
+                <div class="ml-2" v-if="cart.length > 0">
+                    <b>cart: </b>
+                    <span class="badge rounded-pill text-bg-success">{{ cart.length }}</span>
+                </div>
             </div>
         </nav>
-        <div class="form-inline mr-auto">
-            <label for="" class="fw-bold mr-2">Max</label>
-            <input type="number" class="form-control w-25" v-model="maximum">
-        </div>
-        <input type="range" class="custom-range" min="0" max="200" v-model="maximum">
-        <div class="row d-flex mb-3 align-items-center" v-for="item in products" v-if="item.price >= Number(maximum)">
-            <div class="col-1 m-auto">
-                <button class="btn btn-info btn-sm text-white" @click="addItem(item)">+</button>
+        <br>
+
+        <h1>My Shop
+            <button class="btn btn-sm btn-outline-success float-end" @click="style.sliderStatus = !style.sliderStatus">
+                <i class="fas fa-dollar-sign"></i>
+            </button>
+        </h1>
+        <transition name="custom" enter-active-class="animated fadeInDown" leave-active-class="animated slideOutRight">
+            <div v-if="style.sliderStatus">
+                <div class="align-items-center" :class="sliderState">
+                    <label for="" :class="style.label">Max</label>
+                    <input type="number" class="form-control mx-2"
+                        :style="{'width': style.inputWidth + 'px', 'text-align': 'center'}" v-model="maximum">
+                    <input type="range" class="custom-range" min="0" max="200" v-model="maximum">
+                </div>
             </div>
-            <div class="col-sm-4">
-                <img v-bind="{
-                    class: imgClass,
-                    src: item.image,
-                    alt: item.name
-                }">
+        </transition>
+        <transition-group name="fade" tag="div" enter-active-class="animated fadeInRight"
+            leave-active-class="animated fadeOutRight">
+            <div class="row d-flex mb-3 align-items-center" v-for="(item, index) in products" :key="item.id"
+                v-if="item.price >= Number(maximum)">
+                <div class="col-1 m-auto">
+                    <button class="btn btn-info btn-sm text-white" @click="addItem(item)">+</button>
+                </div>
+                <div class="col-sm-4">
+                    <img v-bind="{
+                            class: imgClass,
+                            src: item.image,
+                            alt: item.name
+                        }">
+                </div>
+                <div class="col">
+                    <h3 class="text-info">{{ item.name }}</h3>
+                    <p class="mb-0">{{ item.description }}</p>
+                    <div class="h5 float-right">Rp{{ item.price }}</div>
+                </div>
             </div>
-            <div class="col">
-                <h3 class="text-info">{{ item.name }}</h3>
-                <p class="mb-0">{{ item.description }}</p>
-                <div class="h5 float-right">Rp{{ item.price }}</div>
-            </div>
-        </div>
+        </transition-group>
     </div>
 
 
